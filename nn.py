@@ -18,10 +18,8 @@ class Neuron:
     def __call__(self, x):
         """
         Forward pass: w*x + b followed by tanh activation
-        
         Args:
             x: Input values (1D or 2D numpy array)
-
         Returns:
             tanh activation of the weighted sum
         """

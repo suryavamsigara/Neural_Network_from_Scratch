@@ -20,8 +20,17 @@ class Value:
         def _backward():
             self.grad += 1 * out.grad
             other.grad += 1 * out.grad
-        out_backward = _backward
+        out._backward = _backward
         return out
+    
+    def __radd__(self, other): # Handles float + Value
+        return self + other
+    
+    def __sub__(self, other):
+        return self + (-other)
+    
+    def __rsub__(self, other):
+        return (-self) + other
     
     def __mul__(self, other):
         other = other if isinstance(other, Value) else Value(other)
