@@ -79,4 +79,27 @@ class Value:
         def _backward():
             self.grad += out.grad * (s * (1 - s))
         out._backward = _backward
-        return out  
+        return out
+    
+    def backward(self):
+        """
+        computation_order contains nodes in forward pass order
+        Starts from output: self.grad = 1
+        Calls `_backward()` for each node in reverse computation order
+        """
+        computation_order = []
+        visited = set()
+
+        def build_computational_order(node):
+            if node not in visited:
+                visited.add(node)
+                for child in node._children:
+                    build_computational_order(child)
+                computation_order.append(node)
+        
+        build_computational_order(self)
+
+        self.grad = 1.0
+
+        for node in reversed(computation_order):
+            node._backward()
